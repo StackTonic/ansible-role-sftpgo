@@ -1,0 +1,103 @@
+---
+- name: Ensure group "sftpgo" exists
+  group:
+    name: "{{ sftpgo_group }}"
+    state: present
+- name: create sftpgo user
+  user:
+    name: sftpgo
+    shell: /usr/sbin/nologin
+    groups:
+      - "{{ sftpgo_group }}"
+    comment: "SFTPGo user"
+    create_home: no
+    home: "{{ sftpgo_user_home }}"
+    system: yes
+    state: present
+- name: gvm install go1.17 --binary
+  gvm:
+    version: go1.17
+    gvm_root: "~/.gvm"
+    binary: yes
+- name: Git Clone sftpgo.git
+  git:
+    repo: "{{ sftpgo_git_url }}"
+    dest: "{{ sftpgo_gopath }}/src/github.com/drakkan/sftpgo"
+    refspec: '+refs/pull/*:refs/heads/*'
+- name: Build SFTPgo
+  shell: 'go build -tags nogcs,nosqlite -ldflags "-s -w -X github.com/drakkan/sftpgo/v2/version.commit=`git describe --always --dirty` -X github.com/drakkan/sftpgo/v2/version.date=`date -u +%FT%TZ`" -o sftpgo'
+  args:
+    chdir:  "{{ sftpgo_gopath }}/src/github.com/drakkan/sftpgo"
+  environment:
+    GOPATH: "{{ sftpgo_gopath }}"
+
+- name: Creates directory /etc/sftpgo/
+  file:
+    path: /etc/sftpgo/
+    state: directory
+    owner: "{{ sftpgo_user }}"
+    group: "{{ sftpgo_group }}"
+    mode: 0755
+- name: Creates directory /var/lib/sftpgo
+  file:
+    path: /var/lib/sftpgo
+    state: directory
+    owner: "{{ sftpgo_user }}"
+    group: "{{ sftpgo_group }}"
+    mode: 0755
+- name: Creates directory /usr/share/sftpgo
+  file:
+    path: /usr/share/sftpgo
+    state: directory
+    owner: "{{ sftpgo_user }}"
+    group: "{{ sftpgo_group }}"
+    mode: 0755
+- name: Install SFTPgo
+  command: >
+    install -Dm755 {{ sftpgo_gopath }}/src/github.com/drakkan/sftpgo/sftpgo /usr/bin/sftpgo
+- name: Install SFTPgo
+  command: >
+    install -Dm644 {{ sftpgo_gopath }}/src/github.com/drakkan/sftpgo/sftpgo.json /etc/sftpgo/
+- name: Install SFTPgo
+  command: >
+    sh -c 'echo "SFTPGO_HTTPD__TEMPLATES_PATH=/usr/share/sftpgo/templates" > /etc/sftpgo/sftpgo.env'
+- name: Install SFTPgo
+  command: >
+    sh -c 'echo "SFTPGO_HTTPD__STATIC_FILES_PATH=/usr/share/sftpgo/static" >> /etc/sftpgo/sftpgo.env'
+- name: Install SFTPgo
+  command: >
+    sh -c 'echo "SFTPGO_HTTPD__BACKUPS_PATH=/var/lib/sftpgo/backups" >> /etc/sftpgo/sftpgo.env'
+- name: Install SFTPgo
+  command: >
+    sh -c 'echo "SFTPGO_DATA_PROVIDER__CREDENTIALS_PATH=/var/lib/sftpgo/credentials" >> /etc/sftpgo/sftpgo.env'
+- name: Install SFTPgo
+  command: >
+    cp -r {{ sftpgo_gopath }}/src/github.com/drakkan/sftpgo/static {{ sftpgo_gopath }}/src/github.com/drakkan/sftpgo/templates /usr/share/sftpgo/
+- name: Install SFTPgo
+  command: >
+    chown -R sftpgo:sftpgo /etc/sftpgo /var/lib/sftpgo
+- name: Install SFTPgo
+  command: >
+    chmod 750 /etc/sftpgo /var/lib/sftpgo
+- name: Install SFTPgo
+  command: >
+    chmod 640 /etc/sftpgo/sftpgo.json /etc/sftpgo/sftpgo.env
+- name: Set fcontext
+  community.general.sefcontext:
+    target: '/usr/lib/systemd/system/sftpgo.service'
+    setype: systemd_unit_file_t
+    state: present
+- name: Apply new SELinux file context to filesystem
+  ansible.builtin.command: restorecon -irv /usr/lib/systemd/system/sftpgo.service
+- name: Install SFTPgo
+  command: >
+    install -Dm644 {{ sftpgo_gopath }}/src/github.com/drakkan/sftpgo/init/sftpgo.service /etc/systemd/system
+- name: Install SFTPgo
+  command: >
+    sh -c '/usr/bin/sftpgo gen completion bash > /usr/share/bash-completion/completions/sftpgo'
+- name: Install SFTPgo
+  command: >
+    sudo /usr/bin/sftpgo gen man -d /usr/share/man/man1
+- name: Set Caps
+  command: >
+    sudo setcap CAP_NET_BIND_SERVICE=+eip /usr/bin/sftpgo

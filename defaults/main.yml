@@ -1,0 +1,214 @@
+---
+sftpgo_group: "sftpgo"
+sftpgo_user: "sftpgo"
+sftpgo_user_home: "/var/lib/sftpgo"
+
+sftpgo_git_url: "https://github.com/drakkan/sftpgo.git"
+sftpgo_gopath: "/opt/go"
+
+
+sftpgo_idle_timeout: 15
+sftpgo_upload_mode: 0
+sftpgo_actions_execute_on: []
+sftpgo_actions_execute_sync: []
+sftpgo_actions_hook: ""
+sftpgo_setstat_mode: 0
+sftpgo_temp_path: ""
+sftpgo_proxy_protocol: 0
+sftpgo_proxy_allowed: []
+sftpgo_startup_hook: ""
+sftpgo_post_connect_hook: ""
+sftpgo_max_total_connections: 0
+sftpgo_max_per_host_connections: 50
+
+# Defender Settings
+sftpgo_defender_enabled: "true"
+sftpgo_defender_ban_time: 30
+sftpgo_defender_ban_time_increment: 50
+sftpgo_defender_threshold: 15
+sftpgo_defender_score_invalid: 2
+sftpgo_defender_score_valid: 1
+sftpgo_defender_score_limit_exceeded: 3
+sftpgo_defender_observation_time: 30
+sftpgo_defender_entries_soft_limit: 1000
+sftpgo_defender_entries_hard_limit: 1500
+sftpgo_defender_safelist_file: ""
+sftpgo_defender_blocklist_file: ""
+
+# rate_limiters
+sftpgo_rate_limiters:
+  - average: 0
+    period: 1000
+    burst: 1
+    type: 2
+    protocols:
+      - "SSH"
+      - "FTP"
+      - "DAV"
+      - "HTTP"
+    generate_defender_events: "true"
+    entries_soft_limit: 100
+    entries_hard_limit: 150
+
+#SFTPD
+sftpgo_sftpd_bindings:
+  - port: 22
+    apply_proxy_config: false
+    address: ""
+sftpgo_sftpd_max_auth_tries: 2
+sftpgo_sftpd_banner: "SFTP Server"
+sftpgo_sftpd_host_keys: []
+sftpgo_sftpd_kex_algorithms: []
+sftpgo_sftpd_ciphers: []
+sftpgo_sftpd_macs: []
+sftpgo_sftpd_trusted_user_ca_keys: []
+sftpgo_sftpd_login_banner_file: ""
+sftpgo_sftpd_enabled_ssh_commands:
+  - "md5sum"
+  - "sha1sum"
+  - "cd"
+  - "pwd"
+  - "scp"
+sftpgo_sftpd_keyboard_interactive_auth_hook: ""
+sftpgo_sftpd_password_authentication: "true"
+sftpgo_sftpd_folder_prefix: ""
+
+
+#FTPD
+sftpgo_ftpd_bindings:
+  - port: 21
+    address: ""
+    apply_proxy_config: false
+    tls_mode: 0
+    force_passive_ip: ""
+    client_auth_type: 0
+    tls_cipher_suites: []
+    passive_connections_security: 0
+    active_connections_security: 0
+    debug: false
+sftpgo_ftpd_banner: "FTP Server"
+sftpgo_ftpd_banner_file: ""
+sftpgo_ftpd_active_transfers_port_non_20: "true"
+sftpgo_ftpd_passive_port_range_start: 50000
+sftpgo_ftpd_passive_port_range_end: 50100
+sftpgo_ftpd_disable_active_mode: false
+sftpgo_ftpd_enable_site: false
+sftpgo_ftpd_hash_support: 0
+sftpgo_ftpd_combine_support: 0
+sftpgo_ftpd_certificate_file: ""
+sftpgo_ftpd_certificate_key_file: ""
+sftpgo_ftpd_ca_certificates: []
+sftpgo_ftpd_ca_revocation_lists: []
+
+#webdavd
+sftpgo_webdavd_bindings:
+  - port: 0
+    address: ""
+    enable_https: false
+    client_auth_type: 0
+    tls_cipher_suites: []
+    prefix: ""
+    proxy_allowed: []
+sftpgo_webdavd_certificate_file: ""
+sftpgo_webdavd_certificate_key_file: ""
+sftpgo_webdavd_ca_certificates: []
+sftpgo_webdavd_ca_revocation_lists: []
+sftpgo_webdavd_cors_enabled: false
+sftpgo_webdavd_cors_allowed_origins: []
+sftpgo_webdavd_cors_allowed_methods: []
+sftpgo_webdavd_cors_allowed_headers: []
+sftpgo_webdavd_cors_exposed_headers: []
+sftpgo_webdavd_cors_allow_credentials: false
+sftpgo_webdavd_cors_max_age: 0
+sftpgo_webdavd_cache_users_expiration_time: 0
+sftpgo_webdavd_cache_users_max_size: 50
+sftpgo_webdavd_cache_mime_types_enabled: "true"
+sftpgo_webdavd_cache_mime_types_max_size: 1000
+
+#data_provider
+sftpgo_data_provider_driver: ""
+sftpgo_data_provider_name: ""
+sftpgo_data_provider_host: ""
+sftpgo_data_provider_port: 0
+sftpgo_data_provider_username: ""
+sftpgo_data_provider_password: ""
+sftpgo_data_provider_sslmode: 0
+sftpgo_data_provider_connection_string: ""
+sftpgo_data_provider_sql_tables_prefix: ""
+sftpgo_data_provider_track_quota: 2
+sftpgo_data_provider_delayed_quota_update: 0
+sftpgo_data_provider_pool_size: 0
+sftpgo_data_provider_users_base_dir: ""
+sftpgo_data_provider_actions_execute_on: []
+sftpgo_data_provider_actions_hook: ""
+sftpgo_data_provider_external_auth_hook: ""
+sftpgo_data_provider_external_auth_scope: 0
+sftpgo_data_provider_credentials_path: "credentials"
+sftpgo_data_provider_prefer_database_credentials: false
+sftpgo_data_provider_pre_login_hook: ""
+sftpgo_data_provider_post_login_hook: ""
+sftpgo_data_provider_post_login_scope: 0
+sftpgo_data_provider_check_password_hook: ""
+sftpgo_data_provider_check_password_scope: 0
+
+sftpgo_data_provider_password_hashing_bcrypt_options_cost: 10
+sftpgo_data_provider_password_hashing_argon2_options_memory: 65536
+sftpgo_data_provider_password_hashing_argon2_options_iterations: 1
+sftpgo_data_provider_password_hashing_argon2_options_parallelism: 2
+sftpgo_data_provider_password_hashing_algo: "bcrypt"
+sftpgo_data_provider_password_validation_admins_min_entropy: 0
+sftpgo_data_provider_password_validation_users_min_entropy: 0
+sftpgo_data_provider_password_caching: "true"
+sftpgo_data_provider_update_mode: 0
+sftpgo_data_provider_skip_natural_keys_validation: false
+sftpgo_data_provider_create_default_admin: false
+sftpgo_data_provider_is_shared: 0
+
+
+#httpd
+sftpgo_httpd_bindings:
+  - port: 8080
+    address: ""
+    enable_web_admin: false
+    enable_web_client: false
+    enable_https: false
+    client_auth_type: 0
+    tls_cipher_suites: []
+    hide_login_url:  1
+    proxy_allowed: []
+    prefix: ""
+sftpgo_httpd_templates_path: "/usr/share/sftpgo/templates"
+sftpgo_httpd_static_files_path: "/usr/share/sftpgo/static"
+sftpgo_httpd_backups_path: "/srv/sftpgo/backups"
+sftpgo_httpd_web_root: ""
+sftpgo_httpd_certificate_file: ""
+sftpgo_httpd_certificate_key_file: ""
+sftpgo_httpd_ca_certificates: []
+sftpgo_httpd_ca_revocation_lists: []
+sftpgo_httpd_signing_passphrase: ""
+sftpgo_httpd_max_upload_file_size: 1048576000
+
+# telemetry
+sftpgo_telemetry_bind_port: 10000
+sftpgo_telemetry_bind_address: "127.0.0.1"
+sftpgo_telemetry_enable_profiler: false
+sftpgo_telemetry_auth_user_file: ""
+sftpgo_telemetry_certificate_file: ""
+sftpgo_telemetry_certificate_key_file: ""
+sftpgo_telemetry_tls_cipher_suites: []
+
+# http
+sftpgo_http_timeout: 20
+sftpgo_http_retry_wait_min: 2
+sftpgo_http_retry_wait_max: 30
+sftpgo_http_retry_max: 3
+sftpgo_http_ca_certificates: []
+sftpgo_http_certificates: []
+sftpgo_http_skip_tls_verify: false
+sftpgo_http_headers: []
+
+#kms
+sftpgo_kms_secrets_url: ""
+sftpgo_kms_secrets_master_key: ""
+sftpgo_kms_secrets_master_key_path: ""
+

@@ -1,0 +1,39 @@
+---
+- include_role:
+    name: suzuki-shunsuke.gvm-module
+
+- include_tasks: install.yml
+- name: Configure SFTPGo
+  template:
+    src: "sftpgo.json.j2"
+    dest: "/etc/sftpgo/sftpgo.json"
+    owner: "{{ sftpgo_user }}"
+    group: "{{ sftpgo_group }}"
+    mode: "755"
+- name: Configure SFTPGo
+  file:
+    path: "/etc/sftpgo/certs"
+    owner: "{{ sftpgo_user }}"
+    group: "{{ sftpgo_group }}"
+    mode: "755"
+    state: directory
+
+- name: Allow Firewall
+  firewalld:
+    port: "{{sftpgo_ftpd_passive_port_range_start}}-{{sftpgo_ftpd_passive_port_range_end}}/tcp"
+    permanent: yes
+    immediate: yes
+    state: enabled
+- name: Allow Firewall
+  firewalld:
+    port: 21/tcp
+    permanent: yes
+    immediate: yes
+    state: enabled
+
+- name: Allow Firewall
+  firewalld:
+    port: 8022/tcp
+    permanent: yes
+    immediate: yes
+    state: enabled

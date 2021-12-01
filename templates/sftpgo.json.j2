@@ -1,0 +1,259 @@
+{
+  "common": {
+    "idle_timeout": {{ sftpgo_idle_timeout }},
+    "upload_mode": {{ sftpgo_upload_mode }},
+    "actions": {
+      "execute_on": [
+        {% for item in sftpgo_actions_execute_on %}
+          "{{ item }}"{% if loop.last == false %},{% endif %}
+        {% endfor %} ],
+      "execute_sync": [
+        {% for item in sftpgo_actions_execute_sync %}
+          "{{ item }}"{% if loop.last == false %},{% endif %}
+        {% endfor %} ],
+      "hook": "{{ sftpgo_actions_hook }}"
+    },
+    "setstat_mode": {{ sftpgo_setstat_mode }},
+    "temp_path": "{{ sftpgo_temp_path }}",
+    "proxy_protocol": {{ sftpgo_proxy_protocol }},
+    "proxy_allowed": {{ sftpgo_proxy_allowed }},
+    "startup_hook": "{{ sftpgo_startup_hook }}",
+    "post_connect_hook": "{{ sftpgo_post_connect_hook }}",
+    "max_total_connections": {{ sftpgo_max_total_connections }},
+    "max_per_host_connections": {{ sftpgo_max_per_host_connections }},
+    "defender": {
+      "enabled": {{sftpgo_defender_enabled}},
+      "ban_time": {{sftpgo_defender_ban_time}},
+      "ban_time_increment": {{sftpgo_defender_ban_time_increment}},
+      "threshold": {{sftpgo_defender_threshold}},
+      "score_invalid": {{sftpgo_defender_score_invalid}},
+      "score_valid": {{sftpgo_defender_score_valid}},
+      "score_limit_exceeded": {{sftpgo_defender_score_limit_exceeded}},
+      "observation_time": {{sftpgo_defender_observation_time}},
+      "entries_soft_limit": {{sftpgo_defender_entries_soft_limit}},
+      "entries_hard_limit": {{sftpgo_defender_entries_hard_limit}},
+      "safelist_file": "{{sftpgo_defender_safelist_file}}",
+      "blocklist_file": "{{sftpgo_defender_blocklist_file}}"
+    },
+    "rate_limiters": [
+    {% for limiter in sftpgo_rate_limiters %}
+        {
+        "average": {{limiter.average}},
+        "period": {{limiter.period}},
+        "burst": {{limiter.burst}},
+        "type": {{limiter.type}},
+        "protocols": [
+        {% for item in limiter.protocols %}
+          "{{ item }}"{% if loop.last == false %},{% endif %}
+        {% endfor %} ],
+        "generate_defender_events": {{limiter.generate_defender_events}},
+        "entries_soft_limit": {{limiter.entries_soft_limit}},
+        "entries_hard_limit": {{limiter.entries_hard_limit}}
+       }{% if loop.last == false %},{% endif %}
+    {% endfor %}
+    ]
+  },
+  "sftpd": {
+    "bindings": [
+      {% for binding in sftpgo_sftpd_bindings %}
+      {
+        "port": {{ binding.port }},
+        "apply_proxy_config": {{ binding.apply_proxy_config }}
+      }{% if loop.last == false %},{% endif %}
+      {% endfor %}
+    ],
+    "max_auth_tries": {{sftpgo_sftpd_max_auth_tries}},
+    "banner": "{{ sftpgo_sftpd_banner }}",
+    "host_keys": [],
+    "kex_algorithms": [],
+    "ciphers": [],
+    "macs": [],
+    "trusted_user_ca_keys": [],
+    "login_banner_file": "{{ sftpgo_sftpd_login_banner_file }}",
+    "enabled_ssh_commands": [
+       {% for item in sftpgo_sftpd_enabled_ssh_commands %}
+          "{{ item }}"{% if loop.last == false %},{% endif %}
+        {% endfor %}  ],
+    "keyboard_interactive_auth_hook": "{{ sftpgo_sftpd_keyboard_interactive_auth_hook }}",
+    "password_authentication": {{ sftpgo_sftpd_password_authentication }},
+    "folder_prefix": "{{ sftpgo_sftpd_folder_prefix }}"
+  },
+  "ftpd": {
+    "bindings": [
+      {% for binding in sftpgo_ftpd_bindings %}
+      {
+        "port": {{ binding.port }},
+        "apply_proxy_config": {{ binding.apply_proxy_config }},
+        "address": "{{ binding.address }}",
+        "tls_mode": {{ binding.tls_mode }},
+        "force_passive_ip": "{{ binding.force_passive_ip }}",
+        "client_auth_type": {{ binding.client_auth_type }},
+        "tls_cipher_suites": [],
+        "passive_connections_security": {{ binding.passive_connections_security }},
+        "active_connections_security": {{ binding.active_connections_security }},
+        "debug": {{ binding.debug }}
+      }{% if loop.last == false %},{% endif %}
+      {% endfor %}
+    ],
+    "banner": "{{ sftpgo_ftpd_banner }}",
+    "banner_file": "{{ sftpgo_ftpd_banner_file }}",
+    "active_transfers_port_non_20": {{ sftpgo_ftpd_active_transfers_port_non_20 }},
+    "passive_port_range": {
+      "start": {{sftpgo_ftpd_passive_port_range_start}},
+      "end": {{sftpgo_ftpd_passive_port_range_end}}
+    },
+    "disable_active_mode": {{sftpgo_ftpd_disable_active_mode}},
+    "enable_site": {{sftpgo_ftpd_enable_site}},
+    "hash_support": {{sftpgo_ftpd_hash_support}},
+    "combine_support": {{sftpgo_ftpd_combine_support}},
+    "certificate_file": "{{ sftpgo_ftpd_certificate_file }}",
+    "certificate_key_file": "{{ sftpgo_ftpd_certificate_key_file }}",
+    "ca_certificates": [],
+    "ca_revocation_lists": []
+  },
+  "webdavd": {
+    "bindings": [
+      {% for binding in sftpgo_webdavd_bindings %}
+      {
+        "port": {{ binding.port }},
+        "address": "{{ binding.address }}",
+        "enable_https": {{ binding.enable_https }},
+        "client_auth_type": {{ binding.client_auth_type }},
+        "tls_cipher_suites": [],
+        "prefix": {{ binding.prefix }},
+        "proxy_allowed": []
+      }{% if loop.last == false %},{% endif %}
+      {% endfor %}
+    ],
+    "certificate_file": "{{sftpgo_webdavd_certificate_file}}",
+    "certificate_key_file": "{{sftpgo_webdavd_certificate_key_file}}",
+    "ca_certificates": [],
+    "ca_revocation_lists": [],
+    "cors": {
+      "enabled": {{sftpgo_webdavd_cors_enabled}},
+      "allowed_origins": [],
+      "allowed_methods": [],
+      "allowed_headers": [],
+      "exposed_headers": [],
+      "allow_credentials": {{sftpgo_webdavd_cors_allow_credentials}},
+      "max_age": {{ sftpgo_webdavd_cors_max_age }}
+    },
+    "cache": {
+      "users": {
+        "expiration_time": {{sftpgo_webdavd_cache_users_expiration_time}},
+        "max_size": {{sftpgo_webdavd_cache_users_max_size}}
+      },
+      "mime_types": {
+        "enabled": {{sftpgo_webdavd_cache_mime_types_enabled}},
+        "max_size": {{sftpgo_webdavd_cache_mime_types_max_size}}
+      }
+    }
+  },
+  "data_provider": {
+    "driver": "{{sftpgo_data_provider_driver}}",
+    "name": "{{sftpgo_data_provider_name}}",
+    "host": "{{sftpgo_data_provider_host}}",
+    "port": {{sftpgo_data_provider_port}},
+    "username": "{{sftpgo_data_provider_username}}",
+    "password": "{{sftpgo_data_provider_password}}",
+    "sslmode": {{sftpgo_data_provider_sslmode}},
+    "connection_string": "{{sftpgo_data_provider_connection_string}}",
+    "sql_tables_prefix": "{{sftpgo_data_provider_sql_tables_prefix}}",
+    "track_quota": {{sftpgo_data_provider_track_quota}},
+    "delayed_quota_update": {{sftpgo_data_provider_delayed_quota_update}},
+    "pool_size": {{sftpgo_data_provider_pool_size}},
+    "users_base_dir": "{{sftpgo_data_provider_users_base_dir}}",
+    "actions": {
+      "execute_on": [],
+      "hook": "{{sftpgo_data_provider_actions_hook}}"
+    },
+    "external_auth_hook": "{{sftpgo_data_provider_external_auth_hook}}",
+    "external_auth_scope": {{sftpgo_data_provider_external_auth_scope}},
+    "credentials_path": "{{sftpgo_data_provider_credentials_path}}",
+    "prefer_database_credentials": {{sftpgo_data_provider_prefer_database_credentials}},
+    "pre_login_hook": "{{sftpgo_data_provider_pre_login_hook}}",
+    "post_login_hook": "{{sftpgo_data_provider_post_login_hook}}",
+    "post_login_scope": {{sftpgo_data_provider_post_login_scope}},
+    "check_password_hook": "{{sftpgo_data_provider_check_password_hook}}",
+    "check_password_scope": {{sftpgo_data_provider_check_password_scope}},
+    "password_hashing": {
+      "bcrypt_options": {
+        "cost": {{sftpgo_data_provider_password_hashing_bcrypt_options_cost}}
+      },
+      "argon2_options": {
+        "memory": {{sftpgo_data_provider_password_hashing_argon2_options_memory}},
+        "iterations": {{sftpgo_data_provider_password_hashing_argon2_options_iterations}},
+        "parallelism": {{sftpgo_data_provider_password_hashing_argon2_options_parallelism}}
+      },
+      "algo": "{{sftpgo_data_provider_password_hashing_algo}}"
+    },
+    "password_validation": {
+      "admins": {
+        "min_entropy": {{sftpgo_data_provider_password_validation_admins_min_entropy}}
+      },
+      "users": {
+        "min_entropy": {{sftpgo_data_provider_password_validation_users_min_entropy}}
+      }
+    },
+    "password_caching": {{sftpgo_data_provider_password_caching}},
+    "update_mode": {{sftpgo_data_provider_update_mode}},
+    "skip_natural_keys_validation": {{sftpgo_data_provider_skip_natural_keys_validation}},
+    "create_default_admin": {{sftpgo_data_provider_create_default_admin}},
+    "is_shared": {{sftpgo_data_provider_is_shared}}
+  },
+  "httpd": {
+    "bindings": [
+      {% for binding in sftpgo_httpd_bindings %}
+      {
+        "port": {{ binding.port }},
+        "address": "{{ binding.address }}",
+        "enable_web_admin": {{ binding.enable_web_admin }},
+        "enable_web_client": {{ binding.enable_web_client }},
+        "enable_https": {{ binding.enable_https }},
+        "client_auth_type": {{ binding.client_auth_type }},
+        "tls_cipher_suites": [],
+        "prefix": {{ binding.prefix }},
+        "proxy_allowed": [],
+        "hide_login_url": {{binding.hide_login_url }}
+      }{% if loop.last == false %},{% endif %}
+      {% endfor %}
+    ],
+    "templates_path": "{{ sftpgo_httpd_templates_path }}",
+    "static_files_path": "{{sftpgo_httpd_static_files_path}}",
+    "backups_path": "{{sftpgo_httpd_backups_path}}",
+    "web_root": "{{sftpgo_httpd_web_root}}",
+    "certificate_file": "{{sftpgo_httpd_certificate_file}}",
+    "certificate_key_file": "{{sftpgo_httpd_certificate_key_file}}",
+    "ca_certificates": [],
+    "ca_revocation_lists": [],
+    "signing_passphrase": "{{sftpgo_httpd_signing_passphrase}}",
+    "max_upload_file_size": {{ sftpgo_httpd_max_upload_file_size }}
+  },
+  "telemetry": {
+    "bind_port": {{sftpgo_telemetry_bind_port}},
+    "bind_address": "{{sftpgo_telemetry_bind_address}}",
+    "enable_profiler": {{sftpgo_telemetry_enable_profiler}},
+    "auth_user_file": "{{sftpgo_telemetry_auth_user_file}}",
+    "certificate_file": "{{sftpgo_telemetry_certificate_file}}",
+    "certificate_key_file": "{{sftpgo_telemetry_certificate_key_file}}",
+    "tls_cipher_suites": []
+  },
+  "http": {
+    "timeout": {{sftpgo_http_timeout}},
+    "retry_wait_min": {{sftpgo_http_retry_wait_min}},
+    "retry_wait_max": {{sftpgo_http_retry_wait_max}},
+    "retry_max": {{sftpgo_http_retry_max}},
+    "ca_certificates": [],
+    "certificates": [],
+    "skip_tls_verify": {{sftpgo_http_skip_tls_verify}},
+    "headers": []
+  },
+  "kms": {
+    "secrets": {
+      "url": "{{ sftpgo_kms_secrets_url }}",
+      "master_key": "{{ sftpgo_kms_secrets_master_key }}",
+      "master_key_path": "{{ sftpgo_kms_secrets_master_key_path }}"
+    }
+  },
+  "plugins": []
+}
